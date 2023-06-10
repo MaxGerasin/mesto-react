@@ -18,7 +18,10 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({ link: '', name: '' });
   const [currentUser, setCurrentUser] = useState({ name: '', about: '', avatar: '', _id: '' });
   const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingEditProfile, setIsLoadingEditProfile] = useState(false);
+  const [isLoadingAddPlace, setIsLoadingAddPlace] = useState(false);
+  const [isLoadingEditAvatar, setIsLoadingEditAvatar] = useState(false);
+  const [isLoadingConfirmDelete, setIsLoadingConfirmDelete] = useState(false);
   const [focusCardDelete, setFocusCardDelete] = useState(null);
 
   const handleEditProfileClick = () => {
@@ -41,6 +44,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsConfirmDeletePopupOpen(false);
     setSelectedCard({ link: '', name: '' })
   }
 
@@ -61,7 +65,7 @@ function App() {
   };
 
   const handleCardDelete = () => {
-    setIsLoading(true);
+    setIsLoadingConfirmDelete(true);
 
     api.deleteCard(focusCardDelete._id)
       .then(() => {
@@ -69,40 +73,40 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingConfirmDelete(false));
   };
   
   const handleUpdateUser = (user) => {
-    setIsLoading(true);
+    setIsLoadingEditProfile(true);
     api.updateUserInfo(user)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingEditProfile(false));
   };
 
   const handleUpdateAvatar = (avatar) => {
-    setIsLoading(true);
+    setIsLoadingEditAvatar(true);
     api.updateUserAvatar(avatar)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingEditAvatar(false));
   };
 
   const handleAddPlace = (dataCard) => {
-    setIsLoading(true);
+    setIsLoadingAddPlace(true);
     api.sendCard(dataCard)
       .then((card) => {
         setCards([card, ...cards]);
         closeAllPopups();
       })
       .catch((err) => console.log(err))
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsLoadingAddPlace(false));
   };
 
   const handleOpenConfirmDeletePopup = (currCard) => {
@@ -139,10 +143,10 @@ function App() {
       />
       <Footer />
 
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoading} />
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} isLoading={isLoading} />
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoading} />
-      <ConfirmDeletePopup isOpen={isConfirmDeletePopupOpen} onClose={closeAllPopups} onCardDelete={handleCardDelete} isLoading={isLoading}/>
+      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isLoading={isLoadingEditProfile} />
+      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} isLoading={isLoadingAddPlace} />
+      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoadingEditAvatar} />
+      <ConfirmDeletePopup isOpen={isConfirmDeletePopupOpen} onClose={closeAllPopups} onCardDelete={handleCardDelete} isLoading={isLoadingConfirmDelete}/>
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
     </CurrentUserContext.Provider>

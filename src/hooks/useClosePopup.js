@@ -4,7 +4,7 @@ function useClosePopup(isOpen, onClose) {
   useEffect(() => {
     if (!isOpen) return;
 
-    const isOverlay = (evt) => {
+    const handleCloseByOverlay = (evt) => {
       if (evt.target.classList.contains('popup')) {
         onClose();
       }
@@ -17,13 +17,13 @@ function useClosePopup(isOpen, onClose) {
     };
 
     document.addEventListener('keydown', handleEscClose);
-    document.addEventListener('mousedown', isOverlay)
+    document.addEventListener('mousedown', handleCloseByOverlay)
 
     return () => {
       document.removeEventListener('keydown', handleEscClose);
-      document.removeEventListener('mousedown', isOverlay);
+      document.removeEventListener('mousedown', handleCloseByOverlay);
     }
-  }, [isOpen, onClose])
+  }, [isOpen])
 }
 
 export default  useClosePopup;
